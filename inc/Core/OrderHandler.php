@@ -27,29 +27,32 @@ class OrderHandler {
             return;
         }
 
-        $webhook_url = get_option('discord_woo_notif_webhook_url', '');
+        $order = wc_get_order($order_id);
+        $current_status = $order->get_status();
+
+        // Determine which webhook URL to use
+        $webhook_url = $this->get_webhook_url_for_status($current_status);
         if (empty($webhook_url)) {
             return;
         }
 
-        $order = wc_get_order($order_id);
         $site_url = get_site_url();
         $favicon_url = get_site_icon_url();
 
         $embed = array(
             'title' => $event_type === 'new' 
-                ? sprintf(__('New Order #%s', 'discord-notifications-for-woocommerce'), $order->get_order_number())
-                : sprintf(__('Order #%s Status Updated', 'discord-notifications-for-woocommerce'), $order->get_order_number()),
+                ? sprintf(__('New Order #%s', 'discord-woo-notif'), $order->get_order_number())
+                : sprintf(__('Order #%s Status Updated', 'discord-woo-notif'), $order->get_order_number()),
             'url' => $order->get_edit_order_url(),
-            'color' => 0x00ff00,
+            'color' => $this->get_color_for_status($current_status),
             'fields' => array(
                 array(
-                    'name' => __('Status', 'discord-notifications-for-woocommerce'),
-                    'value' => $order->get_status(),
+                    'name' => __('Status', 'discord-woo-notif'),
+                    'value' => wc_get_order_status_name($current_status),
                     'inline' => true
                 ),
                 array(
-                    'name' => __('Customer', 'discord-notifications-for-woocommerce'),
+                    'name' => __('Customer', 'discord-woo-notif'),
                     'value' => $order->get_formatted_billing_full_name(),
                     'inline' => true
                 )
@@ -64,8 +67,8 @@ class OrderHandler {
         // Add old status information for status change events
         if ($event_type === 'status_change') {
             $embed['fields'][] = array(
-                'name' => __('Old Status', 'discord-notifications-for-woocommerce'),
-                'value' => $old_status,
+                'name' => __('Old Status', 'discord-woo-notif'),
+                'value' => wc_get_order_status_name($old_status),
                 'inline' => true
             );
         }
@@ -85,5 +88,28 @@ class OrderHandler {
 
         // Log the order as processed
         $this->processed_orders[] = $order_id;
+
+        // Optionally, you can add error logging here
+        if (is_wp_error($response)) {
+            error_log('Discord notification failed for order ' . $order_id . ': ' . $response->get_error_message());
+        }
+    }
+
+    private function get_webhook_url_for_status($status) {
+        $status_webhook_url = get_option("discord_woo_notif_{$status}_webhook_url", '');
+        $status_enabled = get_option("discord_woo_notif_{$status}_enabled", 0);
+
+        if ($status_enabled && !empty($status_webhook_url)) {
+            return $status_webhook_url;
+        }
+
+        // Fall back to the default webhook URL if status-specific one is not set or enabled
+        return get_option('discord_woo_notif_webhook_url', '');
+    }
+
+    private function get_color_for_status($status) {
+        $color = get_option("discord_woo_notif_{$status}_color", '#00ff00');
+        // Convert hex color to integer (Discord uses integer representation of colors)
+        return hexdec(str_replace('#', '', $color));
     }
 }
