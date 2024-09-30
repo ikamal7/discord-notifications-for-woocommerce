@@ -1,0 +1,81 @@
+# Copyright (C) 2024 Kamal Hosen
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Discord notifications for WooCommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/discord-notifications-for-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-09-30T09:09:12+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: discord-notifications-for-woocommerce\n"
+
+#. Plugin Name of the plugin
+#: discord-notifications-for-woocommerce.php
+msgid "Discord notifications for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: discord-notifications-for-woocommerce.php
+msgid "https://github.com/ikamal7/discord-notifications-for-woocommerce"
+msgstr ""
+
+#. Description of the plugin
+#: discord-notifications-for-woocommerce.php
+msgid "Sends notifications to a Discord channel via webhook when a WooCommerce order is created or its status changes."
+msgstr ""
+
+#. Author of the plugin
+#: discord-notifications-for-woocommerce.php
+msgid "Kamal Hosen"
+msgstr ""
+
+#. Author URI of the plugin
+#: discord-notifications-for-woocommerce.php
+msgid "https://kamalhosen.com"
+msgstr ""
+
+#: discord-notifications-for-woocommerce.php:34
+msgid "Discord notifications for WooCommerce requires WooCommerce to be installed and active."
+msgstr ""
+
+#: inc/Admin/Settings.php:12
+#: inc/Admin/Settings.php:13
+msgid "Discord WooCommerce Notifications"
+msgstr ""
+
+#: inc/Admin/Settings.php:26
+msgid "Main Settings"
+msgstr ""
+
+#: inc/Admin/Settings.php:33
+msgid "Enable Notifications"
+msgstr ""
+
+#: inc/Admin/Settings.php:41
+msgid "Discord Webhook URL"
+msgstr ""
+
+#: inc/Core/OrderHandler.php:41
+msgid "New Order #%s"
+msgstr ""
+
+#: inc/Core/OrderHandler.php:42
+msgid "Order #%s Status Updated"
+msgstr ""
+
+#: inc/Core/OrderHandler.php:47
+msgid "Status"
+msgstr ""
+
+#: inc/Core/OrderHandler.php:52
+msgid "Customer"
+msgstr ""
+
+#: inc/Core/OrderHandler.php:67
+msgid "Old Status"
+msgstr ""
