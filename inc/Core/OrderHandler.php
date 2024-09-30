@@ -37,7 +37,7 @@ class OrderHandler {
         }
 
         $site_url = get_site_url();
-        $favicon_url = get_site_icon_url();
+        $favicon_url = $this->get_site_icon_url();
 
         $embed = array(
             'title' => $event_type === 'new' 
@@ -111,5 +111,27 @@ class OrderHandler {
         $color = get_option("discord_woo_notif_{$status}_color", '#00ff00');
         // Convert hex color to integer (Discord uses integer representation of colors)
         return hexdec(str_replace('#', '', $color));
+    }
+
+    private function get_site_icon_url() {
+        $site_icon_id = get_option('site_icon');
+        if ($site_icon_id) {
+            $site_icon_url = wp_get_attachment_image_url($site_icon_id, 'full');
+            if ($site_icon_url) {
+                return $site_icon_url;
+            }
+        }
+        
+        // Fallback to default favicon location if no site icon is set
+        $favicon_url = get_site_url() . '/favicon.ico';
+        
+        // Check if favicon exists
+        $response = wp_remote_head($favicon_url);
+        if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+            return $favicon_url;
+        }
+        
+        // If no favicon is found, return an empty string
+        return '';
     }
 }
