@@ -40,8 +40,8 @@ class OrderHandler {
 
         $embed = array(
             'title' => $event_type === 'new' 
-                ? sprintf(__('New Order #%s', 'discord-notifications-for-woocommerce'), $order->get_order_number())
-                : sprintf(__('Order #%s Status Updated', 'discord-notifications-for-woocommerce'), $order->get_order_number()),
+                ? sprintf(__('New Order #%s', 'discord-notifications-for-woocommerce'), $order->get_order_number()) // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+                : sprintf(__('Order #%s Status Updated', 'discord-notifications-for-woocommerce'), $order->get_order_number()), // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
             'url' => $order->get_edit_order_url(),
             'color' => 0x00ff00,
             'fields' => array(
@@ -60,7 +60,7 @@ class OrderHandler {
                 'text' => get_bloginfo('name'),
                 'icon_url' => $favicon_url
             ),
-            'timestamp' => date('c')
+            'timestamp' => date('c') // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
         );
 
         // Add old status information for status change events
