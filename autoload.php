@@ -1,21 +1,21 @@
 <?php
 spl_autoload_register( function ( $class ) {
-    // Project-specific namespace prefix
-    $prefix = 'Kamal\\DiscordWooNotif\\';
+    // Project-specific namespace 
+    $namespace = 'Kamal\\DiscordWooNotif\\';
 
-    // Base directory for the namespace prefix
+    // Base directory for the namespace 
     $base_dir = DISCORD_WOO_NOTIF_PLUGIN_DIR . 'inc/';
 
-    // Check if the class uses the namespace prefix
-    $len = strlen( $prefix );
-    if ( strncmp( $prefix, $class, $len ) !== 0 ) {
+    // Check if the class uses the namespace 
+    $len = strlen( $namespace );
+    if ( strncmp( $namespace, $class, $len ) !== 0 ) {
         return;
     }
 
     // Get the relative class name
     $relative_class = substr( $class, $len );
 
-    // Replace the namespace prefix with the base directory, replace namespace
+    // Replace the namespace  with the base directory, replace namespace
     // separators with directory separators in the relative class name, append
     // with .php
     $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';

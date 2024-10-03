@@ -1,6 +1,8 @@
 <?php
 namespace Kamal\DiscordWooNotif\Admin;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class Settings {
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'add_settings_page' ) );

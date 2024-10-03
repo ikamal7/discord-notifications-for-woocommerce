@@ -1,6 +1,8 @@
 <?php
 namespace Kamal\DiscordWooNotif\Core;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class OrderHandler {
     private $processed_orders = array();
 
