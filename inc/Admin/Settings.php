@@ -20,8 +20,22 @@ class Settings {
     }
 
     public function register_settings() {
-        register_setting( 'discord_woo_notif_settings', 'discord_woo_notif_enabled' );
-        register_setting( 'discord_woo_notif_settings', 'discord_woo_notif_webhook_url' );
+        register_setting( 
+            'discord_woo_notif_settings', 
+            'discord_woo_notif_enabled',
+            array(
+                'sanitize_callback' => array($this, 'sanitize_checkbox'),
+                'default' => 0
+            )
+        );
+        register_setting( 
+            'discord_woo_notif_settings', 
+            'discord_woo_notif_webhook_url',
+            array(
+                'sanitize_callback' => 'esc_url_raw',
+                'default' => ''
+            )
+        );
 
         add_settings_section(
             'discord_woo_notif_main_section',
@@ -74,5 +88,10 @@ class Settings {
         ?>
         <input type="url" name="discord_woo_notif_webhook_url" value="<?php echo esc_url( $webhook_url ); ?>" class="regular-text" />
         <?php
+    }
+
+    // Sanitization callback for checkbox
+    public function sanitize_checkbox( $input ) {
+        return ( isset( $input ) && $input == 1 ) ? 1 : 0;
     }
 }
