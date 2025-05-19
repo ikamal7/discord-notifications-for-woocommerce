@@ -1,4 +1,4 @@
-=== Discord notifications for WooCommerce ===
+=== Order notifications for WooCommerce ===
 Contributors: ikamal
 Tags: woocommerce, discord, notifications, orders, ecommerce
 Requires at least: 6.6

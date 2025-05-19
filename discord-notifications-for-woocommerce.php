@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Discord notifications for WooCommerce
+ * Plugin Name: Order notifications for WooCommerce
  * Plugin URI: https://github.com/ikamal7/discord-notifications-for-woocommerce
  * Description: Sends notifications to a Discord channel via webhook when a WooCommerce order is created or its status changes.
  * Version: 1.0.0
@@ -23,23 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'DISCORD_WOO_NOTIF_VERSION', '1.0.0' );
 define( 'DISCORD_WOO_NOTIF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DISCORD_WOO_NOTIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'DISCORD_WOO_NOTIF_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+define( 'DISCORD_WOO_NOTIF_PRO', false ); // Set to true for PRO version
 
 // Require the autoloader
 require_once DISCORD_WOO_NOTIF_PLUGIN_DIR . 'autoload.php';
 
 // Initialize the plugin
 function discord_woo_notif_init() {
-    // Check if WooCommerce is active
-    if ( ! class_exists( 'WooCommerce' ) ) {
-        add_action( 'admin_notices', function() {
-            echo '<div class="error"><p>' . esc_html__( 'Discord notifications for WooCommerce requires WooCommerce to be installed and active.', 'discord-notifications-for-woocommerce' ) . '</p></div>';
-        });
-        return;
-    }
-
-    // Initialize plugin classes
-    new \Kamal\DiscordWooNotif\Admin\Settings();
-    new \Kamal\DiscordWooNotif\Core\OrderHandler();
+    // Initialize the main plugin class
+    \Kamal\DiscordWooNotif\Plugin::get_instance()->init();
 }
 add_action( 'plugins_loaded', 'discord_woo_notif_init' );
 

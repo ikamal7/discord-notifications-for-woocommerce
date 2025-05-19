@@ -3,77 +3,87 @@ namespace Kamal\DiscordWooNotif\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+
 class Settings {
-    public function __construct() {
+    public function init() {
         add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
-        add_action( 'admin_init', array( $this, 'register_settings' ) );
+        // add_action( 'admin_init', array( $this, 'register_settings' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+        add_action( 'rest_api_init', array( $this, 'register_rest_routes' ) );
+        //add setings links to plugin row
+        add_filter('plugin_action_links_' . DISCORD_WOO_NOTIF_PLUGIN_BASENAME, array( $this, 'add_settings_link' ) );
     }
 
     public function add_settings_page() {
         add_options_page(
-            __( 'Discord WooCommerce Notifications', 'discord-notifications-for-woocommerce' ),
-            __( 'Discord WooCommerce Notifications', 'discord-notifications-for-woocommerce' ),
+            __( 'WooCommerce Order Notifications Settings', 'discord-notifications-for-woocommerce' ),
+            __( 'WooCommerce Notifications', 'discord-notifications-for-woocommerce' ),
             'manage_options',
             'discord-woo-notif-settings',
             array( $this, 'render_settings_page' )
         );
     }
 
-    public function register_settings() {
-        register_setting( 
-            'discord_woo_notif_settings', 
-            'discord_woo_notif_enabled',
-            array(
-                'sanitize_callback' => array($this, 'sanitize_checkbox'),
-                'default' => 0
-            )
-        );
-        register_setting( 
-            'discord_woo_notif_settings', 
-            'discord_woo_notif_webhook_url',
-            array(
-                'sanitize_callback' => 'esc_url_raw',
-                'default' => ''
-            )
-        );
-
-        add_settings_section(
-            'discord_woo_notif_main_section',
-            __( 'Main Settings', 'discord-notifications-for-woocommerce' ),
-            null,
-            'discord-woo-notif-settings'
-        );
-
-        add_settings_field(
-            'discord_woo_notif_enabled',
-            __( 'Enable Notifications', 'discord-notifications-for-woocommerce' ),
-            array( $this, 'render_enabled_field' ),
-            'discord-woo-notif-settings',
-            'discord_woo_notif_main_section'
-        );
-
-        add_settings_field(
-            'discord_woo_notif_webhook_url',
-            __( 'Discord Webhook URL', 'discord-notifications-for-woocommerce' ),
-            array( $this, 'render_webhook_url_field' ),
-            'discord-woo-notif-settings',
-            'discord_woo_notif_main_section'
-        );
+    public function add_settings_link( $links ) {
+        $settings_link = '<a href="options-general.php?page=discord-woo-notif-settings">' . __( 'Settings', 'discord-notifications-for-woocommerce' ) . '</a>';
+        array_unshift( $links, $settings_link );
+        return $links;
     }
 
+
     public function render_settings_page() {
-        ?>
-        <div class="wrap">
-            <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-            <form action="options.php" method="post">
-                <?php
-                settings_fields( 'discord_woo_notif_settings' );
-                do_settings_sections( 'discord-woo-notif-settings' );
-                submit_button();
-                ?>
-            </form>
-        </div>
-        <?php
+        echo '<div id="discord-woo-notif-app"></div>';
+    }
+    
+    /**
+     * Enqueue admin scripts and styles
+     *
+     * @param string $hook Current admin page hook
+     */
+    public function enqueue_admin_scripts( $hook ) {
+
+        if ( 'settings_page_discord-woo-notif-settings' !== $hook ) {
+            return;
+        }
+
+        $asset_file = include DISCORD_WOO_NOTIF_PLUGIN_DIR . 'assets/admin/admin.asset.php';
+
+        // Enqueue the built admin.css file
+        wp_enqueue_style(
+            'discord-woo-notif-admin',
+            DISCORD_WOO_NOTIF_PLUGIN_URL. 'assets/admin/admin.css',
+            array(),
+            DISCORD_WOO_NOTIF_VERSION,
+        );
+
+        
+        // Enqueue the built admin.js file
+        wp_enqueue_script(
+            'discord-woo-notif-admin',
+            DISCORD_WOO_NOTIF_PLUGIN_URL . 'assets/admin/admin.js',
+            $asset_file['dependencies'],
+            $asset_file['version'],
+            true
+        );
+        
+        // Localize script with nonce for REST API
+        wp_localize_script(
+            'discord-woo-notif-admin',
+            'discordWooNotifSettings',
+            array(
+                'nonce' => wp_create_nonce( 'wp_rest' ),
+                'root'  => esc_url_raw( rest_url() ),
+                'isPro' => DISCORD_WOO_NOTIF_PRO,
+            )
+        );
+    }
+    
+    /**
+     * Register REST API routes
+     */
+    public function register_rest_routes() {
+        $controller = new \Kamal\DiscordWooNotif\API\SettingsController();
+        $controller->register_routes();
     }
 
     public function render_enabled_field() {
