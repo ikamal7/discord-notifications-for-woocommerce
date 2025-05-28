@@ -73,9 +73,12 @@ class Settings {
             array(
                 'nonce' => wp_create_nonce( 'wp_rest' ),
                 'root'  => esc_url_raw( rest_url() ),
-                'isPro' => DISCORD_WOO_NOTIF_PRO,
+                'isPro' => (defined( 'WOO_NOTIF_PRO' ) && WOO_NOTIF_PRO === true),
+                'proLink' => DISCORD_WOO_NOTIF_PRO_LINK,
+                'docsLink' => DISCORD_WOO_NOTIF_DOCS_LINK,
             )
         );
+        
     }
     
     /**
@@ -86,19 +89,6 @@ class Settings {
         $controller->register_routes();
     }
 
-    public function render_enabled_field() {
-        $enabled = get_option( 'discord_woo_notif_enabled', 0 );
-        ?>
-        <input type="checkbox" name="discord_woo_notif_enabled" value="1" <?php checked( 1, $enabled ); ?> />
-        <?php
-    }
-
-    public function render_webhook_url_field() {
-        $webhook_url = get_option( 'discord_woo_notif_webhook_url', '' );
-        ?>
-        <input type="url" name="discord_woo_notif_webhook_url" value="<?php echo esc_url( $webhook_url ); ?>" class="regular-text" />
-        <?php
-    }
 
     // Sanitization callback for checkbox
     public function sanitize_checkbox( $input ) {

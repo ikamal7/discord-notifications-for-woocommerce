@@ -3,7 +3,7 @@
  * Plugin Name: Order notifications for WooCommerce
  * Plugin URI: https://github.com/ikamal7/discord-notifications-for-woocommerce
  * Description: Sends notifications to a Discord channel via webhook when a WooCommerce order is created or its status changes.
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: Kamal Hosen
  * Author URI: https://kamalhosen.com
  * License: GPL v2 or later
@@ -24,7 +24,8 @@ define( 'DISCORD_WOO_NOTIF_VERSION', '1.0.0' );
 define( 'DISCORD_WOO_NOTIF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DISCORD_WOO_NOTIF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'DISCORD_WOO_NOTIF_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-define( 'DISCORD_WOO_NOTIF_PRO', false ); // Set to true for PRO version
+define( 'DISCORD_WOO_NOTIF_PRO_LINK', 'https://example.com/upgrade-to-pro' );
+define( 'DISCORD_WOO_NOTIF_DOCS_LINK', 'https://example.com/docs' );
 
 // Require the autoloader
 require_once DISCORD_WOO_NOTIF_PLUGIN_DIR . 'autoload.php';

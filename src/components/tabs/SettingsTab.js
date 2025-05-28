@@ -4,8 +4,10 @@ import { __ } from '@wordpress/i18n';
 const SettingsTab = ({ settings, updateDiscordSettings, updateTelegramSettings, updateSlackSettings, updateEmailSettings, updateSmsSettings, handleSaveSettings, isSaving, activeProvider, setActiveProvider }) => {
     const [showProPopup, setShowProPopup] = useState(false);
     
-    // Check if PRO version is active
-    const isPro = window.discordWooNotifData?.isPro || false;
+    // Check if PRO version is active - using the correct object name
+    const isPro = window.discordWooNotifSettings?.isPro || false;
+    const proLink = window.discordWooNotifSettings?.proLink || '#';
+    const docsLink = window.discordWooNotifSettings?.docsLink || '#';
     
     // Toggle switch component with full-width click support
     const ToggleSwitch = ({ id, checked, onChange, label }) => (
@@ -244,6 +246,232 @@ const SettingsTab = ({ settings, updateDiscordSettings, updateTelegramSettings, 
                     {(settings.email?.enabled || false) && (
                         <>
                             <div className="mb-6">
+                                <label htmlFor="email-provider" className="block text-sm font-medium text-gray-700 mb-2">
+                                    {__('Email Provider', 'discord-notifications-for-woocommerce')}
+                                </label>
+                                <select
+                                    id="email-provider"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={settings.email?.provider || 'smtp'}
+                                    onChange={(e) => updateEmailSettings('provider', e.target.value)}
+                                >
+                                    <option value="smtp">{__('SMTP', 'discord-notifications-for-woocommerce')}</option>
+                                    <option value="sendgrid">{__('SendGrid', 'discord-notifications-for-woocommerce')}</option>
+                                    <option value="mailgun">{__('Mailgun', 'discord-notifications-for-woocommerce')}</option>
+                                    <option value="sendinblue">{__('Sendinblue', 'discord-notifications-for-woocommerce')}</option>
+                                    <option value="mailjet">{__('Mailjet', 'discord-notifications-for-woocommerce')}</option>
+                                </select>
+                            </div>
+
+                            {/* SMTP Settings */}
+                            {(!settings.email?.provider || settings.email?.provider === 'smtp') && (
+                                <>
+                                    <div className="mb-6">
+                                        <label htmlFor="smtp-host" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('SMTP Host', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="smtp-host"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.smtp_host || ''}
+                                            onChange={(e) => updateEmailSettings('smtp_host', e.target.value)}
+                                            placeholder="smtp.gmail.com"
+                                        />
+                                    </div>
+                                    <div className="mb-6">
+                                        <label htmlFor="smtp-port" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('SMTP Port', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id="smtp-port"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.smtp_port || '587'}
+                                            onChange={(e) => updateEmailSettings('smtp_port', e.target.value)}
+                                            placeholder="587"
+                                        />
+                                    </div>
+                                    <div className="mb-6">
+                                        <label htmlFor="smtp-username" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('SMTP Username', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="smtp-username"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.smtp_username || ''}
+                                            onChange={(e) => updateEmailSettings('smtp_username', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="mb-6">
+                                        <label htmlFor="smtp-password" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('SMTP Password', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="smtp-password"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.smtp_password || ''}
+                                            onChange={(e) => updateEmailSettings('smtp_password', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="mb-6">
+                                        <label htmlFor="smtp-encryption" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('Encryption', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <select
+                                            id="smtp-encryption"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.smtp_encryption || 'tls'}
+                                            onChange={(e) => updateEmailSettings('smtp_encryption', e.target.value)}
+                                        >
+                                            <option value="none">{__('None', 'discord-notifications-for-woocommerce')}</option>
+                                            <option value="ssl">{__('SSL', 'discord-notifications-for-woocommerce')}</option>
+                                            <option value="tls">{__('TLS', 'discord-notifications-for-woocommerce')}</option>
+                                        </select>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* SendGrid Settings */}
+                            {settings.email?.provider === 'sendgrid' && (
+                                <div className="mb-6">
+                                    <label htmlFor="sendgrid-api-key" className="block text-sm font-medium text-gray-700 mb-2">
+                                        {__('SendGrid API Key', 'discord-notifications-for-woocommerce')}
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="sendgrid-api-key"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={settings.email?.sendgrid_api_key || ''}
+                                        onChange={(e) => updateEmailSettings('sendgrid_api_key', e.target.value)}
+                                        placeholder="SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Mailgun Settings */}
+                            {settings.email?.provider === 'mailgun' && (
+                                <>
+                                    <div className="mb-6">
+                                        <label htmlFor="mailgun-api-key" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('Mailgun API Key', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="mailgun-api-key"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.mailgun_api_key || ''}
+                                            onChange={(e) => updateEmailSettings('mailgun_api_key', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="mb-6">
+                                        <label htmlFor="mailgun-domain" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('Mailgun Domain', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="mailgun-domain"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.mailgun_domain || ''}
+                                            onChange={(e) => updateEmailSettings('mailgun_domain', e.target.value)}
+                                            placeholder="mg.yourdomain.com"
+                                        />
+                                    </div>
+                                    <div className="mb-6">
+                                        <label htmlFor="mailgun-region" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('Mailgun Region', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <select
+                                            id="mailgun-region"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.mailgun_region || 'us'}
+                                            onChange={(e) => updateEmailSettings('mailgun_region', e.target.value)}
+                                        >
+                                            <option value="us">{__('US', 'discord-notifications-for-woocommerce')}</option>
+                                            <option value="eu">{__('EU', 'discord-notifications-for-woocommerce')}</option>
+                                        </select>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Sendinblue Settings */}
+                            {settings.email?.provider === 'sendinblue' && (
+                                <div className="mb-6">
+                                    <label htmlFor="sendinblue-api-key" className="block text-sm font-medium text-gray-700 mb-2">
+                                        {__('Sendinblue API Key', 'discord-notifications-for-woocommerce')}
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="sendinblue-api-key"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={settings.email?.sendinblue_api_key || ''}
+                                        onChange={(e) => updateEmailSettings('sendinblue_api_key', e.target.value)}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Mailjet Settings */}
+                            {settings.email?.provider === 'mailjet' && (
+                                <>
+                                    <div className="mb-6">
+                                        <label htmlFor="mailjet-api-key" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('Mailjet API Key', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="mailjet-api-key"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.mailjet_api_key || ''}
+                                            onChange={(e) => updateEmailSettings('mailjet_api_key', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="mb-6">
+                                        <label htmlFor="mailjet-secret-key" className="block text-sm font-medium text-gray-700 mb-2">
+                                            {__('Mailjet Secret Key', 'discord-notifications-for-woocommerce')}
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="mailjet-secret-key"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={settings.email?.mailjet_secret_key || ''}
+                                            onChange={(e) => updateEmailSettings('mailjet_secret_key', e.target.value)}
+                                        />
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Common Email Fields */}
+                            <div className="mb-6">
+                                <label htmlFor="email-from-name" className="block text-sm font-medium text-gray-700 mb-2">
+                                    {__('From Name', 'discord-notifications-for-woocommerce')}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="email-from-name"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={settings.email?.from_name || ''}
+                                    onChange={(e) => updateEmailSettings('from_name', e.target.value)}
+                                    placeholder={__('Your Store Name', 'discord-notifications-for-woocommerce')}
+                                />
+                            </div>
+                            
+                            <div className="mb-6">
+                                <label htmlFor="email-from-address" className="block text-sm font-medium text-gray-700 mb-2">
+                                    {__('From Email Address', 'discord-notifications-for-woocommerce')}
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email-from-address"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value={settings.email?.from_email || ''}
+                                    onChange={(e) => updateEmailSettings('from_email', e.target.value)}
+                                    placeholder="noreply@yourstore.com"
+                                />
+                            </div>
+                            
+                            <div className="mb-6">
                                 <label htmlFor="email-recipients" className="block text-sm font-medium text-gray-700 mb-2">
                                     {__('Email Recipients', 'discord-notifications-for-woocommerce')}
                                 </label>
@@ -382,12 +610,15 @@ const SettingsTab = ({ settings, updateDiscordSettings, updateTelegramSettings, 
                                 {__('Close', 'discord-notifications-for-woocommerce')}
                             </button>
                             <a 
-                                href="https://example.com/upgrade-to-pro" 
+                                href={proLink} 
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-4 py-2 bg-black text-white rounded-md hover:bg-black-700 cursor-pointer"
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
                             >
-                                {__('Upgrade to PRO', 'discord-notifications-for-woocommerce')}
+                                <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+                                </svg>
+                                <span>{__('Unlock Pro Features', 'discord-notifications-for-woocommerce')}</span>
                             </a>
                         </div>
                     </div>
