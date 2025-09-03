@@ -3,12 +3,12 @@ Contributors: ikamal
 Tags: woocommerce, discord, telegram, notifications, orders
 Requires at least: 5.0
 Tested up to: 6.8.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org12.0.html
 
-Get real-time WooCommerce order notifications on Discord, Telegram, Slack, SMS, and Email with advanced customization and filtering in the Free and Pro versions.
+Get real-time WooCommerce order notifications on Discord, Telegram, Slack, SMS, and Email.
 
 == Description ==
 
@@ -16,7 +16,7 @@ Get real-time WooCommerce order notifications on Discord, Telegram, Slack, SMS, 
 
 Whether you're a solo entrepreneur or managing a team, this plugin ensures you and your team are always in the loop with real-time updates, reducing the need to constantly check your WordPress admin panel. Perfect for eCommerce businesses of all sizes, our plugin enhances team collaboration and boosts operational efficiency.
 
-Check out our [YouTube video](https://www.youtube.com/watch?v=placeholder_video_id) for a quick demo of the plugin’s features and setup process.
+
 
 = Key Features =
 
@@ -82,7 +82,7 @@ This plugin is designed exclusively for **WooCommerce** to ensure seamless integ
 
 = How do I upgrade to the Pro version? =
 
-Visit [our website](https://example.com) to purchase a Pro license. Once purchased, enter your license key in the plugin’s dashboard to unlock premium features.t
+Visit [our website](https://kamalhosen.com) to purchase a Pro license. Once purchased, enter your license key in the plugin’s dashboard to unlock premium features.t
 
 == Screenshots ==
 
