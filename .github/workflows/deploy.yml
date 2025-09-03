@@ -20,12 +20,14 @@ jobs:
       run: |
         npm install
         npm run build
-        
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: WordPress Plugin Deploy
+      id: deploy
+      uses: 10up/action-wordpress-plugin-deploy@stable
       with:
-        files: ${{ github.workspace }}/discord-notifications-for-woocommerce.zip
-        generate_release_notes: true
+        generate-zip: true
+      env:
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        SLUG: discord-notifications-for-woocommerce
         
