@@ -3,6 +3,7 @@
 namespace Kamal\DiscordWooNotif;
 
 use Kamal\DiscordWooNotif\Admin\Settings;
+use Kamal\DiscordWooNotif\Admin\ReviewNotice;
 use Kamal\DiscordWooNotif\Provider\Discord\DiscordProvider;
 use Kamal\DiscordWooNotif\Provider\Telegram\TelegramProvider;
 
@@ -52,6 +53,10 @@ class Plugin {
         // Admin components
         $settings = new Settings();
         $settings->init();
+        
+        // Initialize review notice
+        $review_notice = new ReviewNotice();
+        $review_notice->init();
         
         // Initialize providers
         $discord_provider = new DiscordProvider();

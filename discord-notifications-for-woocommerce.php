@@ -39,7 +39,10 @@ add_action( 'plugins_loaded', 'discord_woo_notif_init' );
 
 // Activation hook
 register_activation_hook( __FILE__, function() {
-    // Activation tasks if needed
+    // Set first activation time for review notice
+    if ( ! get_option( 'discord_woo_notif_first_activation' ) ) {
+        update_option( 'discord_woo_notif_first_activation', time() );
+    }
 });
 
 // Deactivation hook
