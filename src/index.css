@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* Custom styles for the Discord Notifications for WooCommerce plugin */
+.discord-woo-notif-app {
+    @apply p-4;
+}
+
+/* Custom tab styles */
+.discord-woo-notif-app .active-tab {
+    @apply border-blue-500 text-blue-600;
+}
+
+/* Tab content container */
+.discord-woo-notif-app .tab-content {
+    @apply mt-4;
+}

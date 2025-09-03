@@ -1,12 +1,18 @@
 <?php
-namespace Kamal\DiscordWooNotif\Core;
+namespace Kamal\DiscordWooNotif\Provider\Discord;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class OrderHandler {
+use Kamal\DiscordWooNotif\Provider\ProviderInterface;
+
+class DiscordProvider implements ProviderInterface {
     private $processed_orders = array();
 
     public function __construct() {
+        // Constructor is empty as initialization is done in init()
+    }
+
+    public function init() {
         add_action('woocommerce_new_order', array($this, 'handle_new_order'), 10, 1);
         add_action('woocommerce_order_status_changed', array($this, 'handle_status_change'), 10, 3);
     }
