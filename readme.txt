@@ -3,7 +3,7 @@ Contributors: storewc, ikamal
 Tags: woocommerce, discord, telegram, notifications, orders
 Requires at least: 5.0
 Tested up to: 6.8.1
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org12.0.html
