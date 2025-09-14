@@ -1,5 +1,5 @@
 === Order Notifications for WooCommerce ===
-Contributors: ikamal
+Contributors: storewc, ikamal
 Tags: woocommerce, discord, telegram, notifications, orders
 Requires at least: 5.0
 Tested up to: 6.8.1
